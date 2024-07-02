@@ -9,6 +9,7 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   useReactTable,
+  RowSelectionState,
 } from '@tanstack/react-table';
 import {
   Table,
@@ -25,57 +26,16 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
-// import DataDownload from "../app/u/datadownload";
+import Columns from '@/app/component/Columns';
 
-// Define your data type
 interface UserData {
   name: string;
   email: string;
   status: string;
-  datecreated: string; // Ensure this matches the format of your date field
+  datecreated: string;
 }
-
-// Define your columns
-const columns: ColumnDef<UserData, any>[] = [
-  {
-    id: 'select',
-    header: ({ table }) => (
-      <input
-        type="checkbox"
-        checked={table.getIsAllRowsSelected()}
-        onChange={table.getToggleAllRowsSelectedHandler()}
-      />
-    ),
-    cell: ({ row }) => (
-      <input
-        type="checkbox"
-        checked={row.getIsSelected()}
-        onChange={row.getToggleSelectedHandler()}
-      />
-    ),
-  },
-  {
-    accessorKey: 'name',
-    header: () => <div className='flex items-center'>Name</div>,
-    cell: info => info.getValue(),
-  },
-  {
-    accessorKey: 'email',
-    header: () => <div className='flex items-center'>Email</div>,
-    cell: info => info.getValue(),
-  },
-  {
-    accessorKey: 'status',
-    header: () => <div className='flex items-center'>Status</div>,
-    cell: info => info.getValue(),
-  },
-  {
-    accessorKey: 'datecreated',
-    header: () => <div className='flex items-center'>Date Created</div>,
-    cell: info => info.getValue(),
-  },
-];
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -88,15 +48,43 @@ export function DataTable<TData, TValue>({
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
-  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
+
+  const selectionColumn: ColumnDef<TData> = {
+    id: 'select',
+    header: ({ table }) => (
+      <Checkbox
+        checked={table.getIsAllPageRowsSelected()}
+        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
+        aria-label="Select all"
+      />
+    ),
+    cell: ({ row }) => (
+      <Checkbox
+        checked={row.getIsSelected()}
+        onCheckedChange={(value) => row.toggleSelected(!!value)}
+        aria-label="Select row"
+      />
+    ),
+    enableSorting: false,
+    enableHiding: false,
+  };
+
+  const columnsWithSelection = useMemo(
+    () => [selectionColumn, ...columns.filter(col => col.id !== 'select')],
+    [columns]
+  );
 
   const table = useReactTable({
     data,
-    columns,
+    columns: columnsWithSelection,
     state: {
       sorting,
       columnVisibility,
+      rowSelection,
     },
+    enableRowSelection: true,
+    onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
@@ -104,20 +92,6 @@ export function DataTable<TData, TValue>({
     getFilteredRowModel: getFilteredRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
   });
-
-  const handleRowSelect = (rowId: string) => {
-    setSelectedRows(prev => {
-      const newSelectedRows = new Set(prev);
-      if (newSelectedRows.has(rowId)) {
-        newSelectedRows.delete(rowId);
-      } else {
-        newSelectedRows.add(rowId);
-      }
-      return newSelectedRows;
-    });
-  };
-
-  const isRowSelected = (rowId: string) => selectedRows.has(rowId);
 
   const getSortingIcon = (columnId: string) => {
     const isSorted = sorting.find(sort => sort.id === columnId);
@@ -127,37 +101,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className='flex items-center justify-between mb-4'>
-        <div className='flex items-center justify-end'>
-          <div className='ml-4'>
-            {/* <DataDownload data={data} /> */}
-          </div>
-          {/* Column visibility */}
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant='outline' className='ml-2'>
-                Columns
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align='end'>
-              {table
-                .getAllColumns()
-                .filter(column => column.getCanHide())
-                .map(column => (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className='capitalize'
-                    checked={column.getIsVisible()}
-                    onCheckedChange={value => column.toggleVisibility(!!value)}
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
-      {/* Table */}
+      <Columns table={table} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -183,18 +127,14 @@ export function DataTable<TData, TValue>({
           </TableHeader>
           <TableBody>
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map(row => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
                   data-state={row.getIsSelected() ? 'selected' : undefined}
-                  className={isRowSelected(row.id) ? 'bg-blue-100' : ''}
                 >
-                  {row.getVisibleCells().map(cell => (
+                  {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
+                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
                 </TableRow>
@@ -202,7 +142,7 @@ export function DataTable<TData, TValue>({
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={columnsWithSelection.length}
                   className='h-24 text-center'
                 >
                   No results.
@@ -212,7 +152,6 @@ export function DataTable<TData, TValue>({
           </TableBody>
         </Table>
       </div>
-      {/* Pagination */}
       <div className='flex items-center justify-end space-x-2 py-4'>
         <Button
           variant='outline'
