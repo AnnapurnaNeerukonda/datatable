@@ -22,7 +22,7 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch }) => {
     try {
       const response = await fetch(`/api/search?searchQuery=${encodeURIComponent(searchQuery)}`);
       const data = await response.json();
-      onSearch(searchQuery);
+      onSearch(data);
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
