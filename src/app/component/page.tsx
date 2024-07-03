@@ -94,10 +94,14 @@ const DisplayDetails: React.FC = () => {
   }, [searchQuery, selectedStatus, dateRange, data, originalData, isServerSearch]);
 
   return (
+    
     <div className="container mx-auto py-10">
-      <DatePickerWithRange onDateChange={handleDateChange} />
-      <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
-      <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+      <div className="flex justify-between mb-4">
+        <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
+        <DatePickerWithRange onDateChange={handleDateChange} />
+        <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+     
+      </div>
       <DataTable columns={columns} data={filteredData} />
     </div>
   );
