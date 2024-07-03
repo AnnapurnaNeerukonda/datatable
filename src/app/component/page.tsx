@@ -26,6 +26,25 @@ const DisplayDetails: React.FC = () => {
     setIsServerSearch(true);
   };
 
+  const handleDateChange = async (newDateRange: DateRange | undefined) => {
+    setDateRange(newDateRange);
+
+    if (newDateRange?.from && newDateRange.to) {
+      try {
+        const response = await fetch(`/api/displaydetails?from=${newDateRange.from.toISOString()}&to=${newDateRange.to.toISOString()}`);
+        const data: DataItem[] = await response.json();
+        setData(data);
+        setFilteredData(data);
+        setIsServerSearch(true);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    } else {
+      setData(originalData);
+      setIsServerSearch(false);
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -76,7 +95,7 @@ const DisplayDetails: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <DatePickerWithRange onDateChange={setDateRange} />
+      <DatePickerWithRange onDateChange={handleDateChange} />
       <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
       <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
       <DataTable columns={columns} data={filteredData} />
