@@ -1,28 +1,27 @@
 'use client';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 
 interface SearchComponentProps {
   onSearch: (searchQuery: string) => void;
+  onSearchButtonClick: (searchResults: any[]) => void;
 }
 
-const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch }) => {
+const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch, onSearchButtonClick }) => {
   const [searchQuery, setSearchQuery] = useState<string>('');
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+    onSearch(event.target.value);
   };
-
-  useEffect(() => {
-    onSearch(searchQuery);
-  }, [searchQuery, onSearch]);
 
   const handleSearchClick = async () => {
     try {
       const response = await fetch(`/api/search?searchQuery=${encodeURIComponent(searchQuery)}`);
       const data = await response.json();
-      onSearch(searchQuery);
+      onSearchButtonClick(data);
+      console.log(data);
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
