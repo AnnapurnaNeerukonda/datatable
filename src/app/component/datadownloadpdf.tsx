@@ -1,42 +1,26 @@
 import React from 'react';
+import { Button } from '@/components/ui/button';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
-import { Button } from '@/components/ui/button';
-import { TableInstance } from '@tanstack/react-table';
 
-interface DataDownloadPDFProps<TData> {
-  table: TableInstance<TData>;
+interface DownloadPDFButtonProps {
+  data: any[];
 }
 
-const DataDownloadPDF: React.FC<DataDownloadPDFProps<any>> = ({ table }) => {
-  const handleDownloadPDF = () => {
+const DownloadPDFButton: React.FC<DownloadPDFButtonProps> = ({ data }) => {
+  const handleDownload = () => {
     const doc = new jsPDF();
 
-    // Extract column headers
-    const tableColumns = table.allColumns.map(column => column.id);
+    const tableData = data.map(item => [item.name, item.email, item.status,item.amount, item.datecreated]);
 
-    // Extract rows data
-    const tableRows = table.rows.map(row =>
-      tableColumns.map(columnId => row.values[columnId])
-    );
+    const columns = ['Name', 'Email', 'Status','amount','Date Created'];
 
-    // Set up the PDF table
-    doc.autoTable({
-      head: [tableColumns],
-      body: tableRows,
-      startY: 10,
-      theme: 'striped',
-    });
+    doc.autoTable({ head: [columns], body: tableData });
 
-    // Save the PDF file
-    doc.save('table-data.pdf');
+    doc.save('data.pdf');
   };
 
-  return (
-    <div>
-      <Button onClick={handleDownloadPDF}>Download Table as PDF</Button>
-    </div>
-  );
+  return <Button onClick={handleDownload}>Download PDF</Button>;
 };
 
-export default DataDownloadPDF;
+export default DownloadPDFButton;
