@@ -1,34 +1,39 @@
-'use client'
-import { FC } from 'react';
-import { Button } from '@/components/ui/button';
-import { Parser } from 'json2csv';
+// DownloadButton.tsx
 
-interface CSVDownloadProps {
-  data: any[]; 
-  columns: string[]; 
+import React from 'react';
+import { Button } from '@/components/ui/button';
+
+interface DownloadButtonProps {
+  data: any[];
 }
 
-const CSVDownload: FC<CSVDownloadProps> = ({ data, columns }) => {
-  const handleDownloadCSV = () => {
-    const parser = new Parser({ fields: columns });
-    const csv = parser.parse(data);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    const url = URL.createObjectURL(blob);
+const DownloadButton: React.FC<DownloadButtonProps> = ({ data }) => {
+  const handleDownload = () => {
+    const csvData = data.map(row => ({
+      name: row.name,
+      email: row.email,
+      status: row.status,
+      datecreated: row.datecreated,
+    }));
 
-    link.setAttribute('href', url);
-    link.setAttribute('download', 'user-data.csv');
-    link.style.visibility = 'hidden';
-    document.body.appendChild(link);
+    const csvContent =
+      'data:text/csv;charset=utf-8,' +
+      csvData.map(row => Object.values(row).join(',')).join('\n');
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement('a');
+    link.setAttribute('href', encodedUri);
+    link.setAttribute('download', 'data.csv');
+    document.body.appendChild(link); // Required for Firefox
     link.click();
     document.body.removeChild(link);
   };
 
   return (
-    <div>
-      <Button onClick={handleDownloadCSV}>Download CSV</Button>
-    </div>
+    <Button onClick={handleDownload}>
+      Download CSV
+    </Button>
   );
 };
 
-export default CSVDownload;
+export default DownloadButton;
