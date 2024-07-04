@@ -6,7 +6,6 @@ import SearchComponent from './searchComponent';
 import StatusFilterComponent from './StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from './dateRangePicker';
 import { parseISO, isWithinInterval } from 'date-fns';
-import ThemeToggle from './theme-toggle';
 
 interface DataItem {
   [key: string]: any;
@@ -101,9 +100,6 @@ const DisplayDetails: React.FC = () => {
         <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
         <DatePickerWithRange onDateChange={handleDateChange} />
         <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
-        <span className="flex justify-end p-2 -mt-2">
-         <ThemeToggle />
-           </span>
       </div>
       <DataTable columns={columns} data={filteredData} />
     </div>
