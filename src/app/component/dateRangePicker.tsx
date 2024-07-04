@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { format } from 'date-fns';
 import { Calendar as CalendarIcon } from 'lucide-react';
 import { DateRange } from 'react-day-picker';
@@ -19,10 +19,16 @@ interface DatePickerProps {
 
 export function DatePickerWithRange({ className, onDateChange }: DatePickerProps) {
   const [date, setDate] = useState<DateRange | undefined>(undefined);
+  const [okClicked, setOkClicked] = useState(false);
 
   const handleDateChange = (newDate: DateRange | undefined) => {
     setDate(newDate);
-    onDateChange(newDate);
+    setOkClicked(false);
+  };
+
+  const handleOkClick = () => {
+    setOkClicked(true);
+    onDateChange(date);
   };
 
   return (
@@ -60,6 +66,11 @@ export function DatePickerWithRange({ className, onDateChange }: DatePickerProps
             className="rounded-md border"
             numberOfMonths={2}
           />
+          {date?.from && date.to && (
+            <div className="flex justify-end p-2">
+              <Button onClick={handleOkClick}>OK</Button>
+            </div>
+          )}
         </PopoverContent>
       </Popover>
     </div>

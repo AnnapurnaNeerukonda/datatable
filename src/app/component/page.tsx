@@ -5,6 +5,8 @@ import { DataTable } from '../../components/data-table';
 import SearchComponent from './searchComponent';
 import StatusFilterComponent from './StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from './dateRangePicker';
+import { parseISO, isWithinInterval } from 'date-fns';
+import ThemeToggle from './theme-toggle';
 
 interface DataItem {
   [key: string]: any;
@@ -73,8 +75,8 @@ const DisplayDetails: React.FC = () => {
 
     if (dateRange?.from && dateRange.to) {
       filtered = filtered.filter((item) => {
-        const itemDate = new Date(item.datecreated);
-        return itemDate >= dateRange.from && itemDate <= dateRange.to;
+        const itemDate = parseISO(item.datecreated);
+        return isWithinInterval(itemDate, { start: dateRange.from, end: dateRange.to });
       });
     }
 
@@ -95,9 +97,14 @@ const DisplayDetails: React.FC = () => {
 
   return (
     <div className="container mx-auto py-10">
-      <DatePickerWithRange onDateChange={handleDateChange} />
-      <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
-      <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+      <div className="flex justify-between mb-4">
+        <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
+        <DatePickerWithRange onDateChange={handleDateChange} />
+        <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+        <span className="flex justify-end p-2 -mt-2">
+         <ThemeToggle />
+           </span>
+      </div>
       <DataTable columns={columns} data={filteredData} />
     </div>
   );
