@@ -28,7 +28,7 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
-import Columns from '@/app/component/Columns';
+import Columns from '@/app/component/columns';
 
 interface UserData {
   name: string;
