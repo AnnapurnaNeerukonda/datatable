@@ -29,12 +29,13 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
 import Columns from '@/app/component/columns';
-// interface UserData {
-//   name: string;
-//   email: string;
-//   status: string;
-//   datecreated: string;
-// }
+
+interface UserData {
+  name: string;
+  email: string;
+  status: string;
+  datecreated: string;
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -100,11 +101,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className='flex items-center justify-between mb-4'>
-        <div>
-          <Columns table={table}/>
-        </div>
-      </div>
+      <Columns table={table} />
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
