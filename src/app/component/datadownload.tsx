@@ -1,37 +1,32 @@
-// DownloadButton.tsx
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
-
+import * as XLSX from 'xlsx';
 interface DownloadButtonProps {
   data: any[];
 }
-
 const DownloadButton: React.FC<DownloadButtonProps> = ({ data }) => {
   const handleDownload = () => {
-    const csvData = data.map(row => ({
-      name: row.name,
-      email: row.email,
-      status: row.status,
-      datecreated: row.datecreated,
-    }));
+    const worksheet = XLSX.utils.json_to_sheet(data);
 
-    const csvContent =
-      'data:text/csv;charset=utf-8,' +
-      csvData.map(row => Object.values(row).join(',')).join('\n');
+    const workbook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
 
-    const encodedUri = encodeURI(csvContent);
+    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
+
+    const blob = new Blob([excelBuffer], { type: 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+
     const link = document.createElement('a');
-    link.setAttribute('href', encodedUri);
-    link.setAttribute('download', 'data.csv');
-    document.body.appendChild(link); // Required for Firefox
+    link.href = url;
+    link.setAttribute('download', 'data.xlsx');
+    document.body.appendChild(link); 
     link.click();
     document.body.removeChild(link);
   };
 
   return (
     <Button onClick={handleDownload}>
-      Download CSV
+      Download Excel
     </Button>
   );
 };
