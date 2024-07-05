@@ -79,13 +79,16 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <Columns table={table} />
-      <div className='flex items-center justify-between mb-4'>
-        <DownloadButton data={table.getRowModel().rows.map(row => row.original)} />
-      </div>
-      <div className='flex items-center justify-between mb-4'>
-        <DownloadPDFButton data={table.getRowModel().rows.map(row => row.original)} />
-      </div>
+ <div className='flex items-center justify-between mb-4'>
+  <Columns table={table} />
+  <div className='flex items-center space-x-2'>
+    <DownloadButton data={table.getRowModel().rows.map(row => row.original)} />
+    <DownloadPDFButton data={table.getRowModel().rows.map(row => row.original)} />
+  </div>
+</div>
+
+
+
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

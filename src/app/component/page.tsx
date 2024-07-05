@@ -5,8 +5,19 @@ import { DataTable } from '../../components/data-table';
 import SearchComponent from './searchComponent';
 import StatusFilterComponent from './StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from './dateRangePicker';
-import { parseISO, isWithinInterval, format } from 'date-fns'; // Import format from date-fns
-
+import { parseISO, isWithinInterval, format } from 'date-fns'; 
+import ThemeToggle from './theme-toggle';
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+} from '@/components/ui/dropdown-menu';
+import { Button } from 'react-day-picker';
+import DownloadButton from './datadownload';
+import DownloadPDFButton from './datadownloadpdf';
 interface DataItem {
   [key: string]: any;
 }
@@ -34,8 +45,8 @@ const DisplayDetails: React.FC = () => {
       try {
         const response = await fetch(`/api/displaydetails?from=${newDateRange.from.toISOString()}&to=${newDateRange.to.toISOString()}`);
         const data: DataItem[] = await response.json();
-        setData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') }))); // Format datecreated
-        setFilteredData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') }))); // Format datecreated
+        setData(data);
+        setFilteredData(data); 
         setIsServerSearch(true);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -95,13 +106,48 @@ const DisplayDetails: React.FC = () => {
   }, [searchQuery, selectedStatus, dateRange, data, originalData, isServerSearch]);
 
   return (
+
     <div className="container mx-auto py-10">
-      <div className="flex justify-between mb-4">
-        <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
-        <DatePickerWithRange onDateChange={handleDateChange} />
-        <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
-      </div>
-      <DataTable columns={columns} data={filteredData} />
+     {/* <div className="flex justify-between mb-4">
+    <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
+  
+  <div className="flex justify-between gap-4">
+     <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+      <DatePickerWithRange onDateChange={handleDateChange} />
+    
+    <div >
+     <ThemeToggle />
+
+    </div>
+
+  </div>
+
+</div> */}
+<div className="flex flex-col md:flex-row md:justify-between mb-4">
+  <div className="flex md:flex-1 md:justify-between md:gap-4">
+    <div className="flex md:flex-1 md:justify-start">
+      <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
+    </div>
+    <div className="md:hidden">
+      <ThemeToggle />
+    </div>
+  </div>
+  
+  <div className="flex md:flex-1 md:justify-between gap-4 mt-4 md:mt-0">
+    <div className="flex md:flex-1 md:justify-start md:gap-4">
+      <DatePickerWithRange onDateChange={handleDateChange} />
+      <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+    </div>
+    <div className="hidden md:flex ">
+      <ThemeToggle />
+    </div>
+  </div>
+</div>
+
+
+
+<DataTable columns={columns} data={filteredData} />
+
     </div>
   );
 };
