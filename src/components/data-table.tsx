@@ -1,13 +1,14 @@
 import React, { useState, useMemo } from 'react';
-import {ColumnDef,flexRender,SortingState,VisibilityState,getCoreRowModel,getSortedRowModel,getFilteredRowModel,getPaginationRowModel,useReactTable,RowSelectionState,} from '@tanstack/react-table';
-import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from '@/components/ui/table';
-import {DropdownMenu,DropdownMenuCheckboxItem,DropdownMenuContent,DropdownMenuTrigger,} from '@/components/ui/dropdown-menu';
+import { ColumnDef, flexRender, SortingState, VisibilityState, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable, RowSelectionState } from '@tanstack/react-table';
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { DropdownMenu, DropdownMenuCheckboxItem, DropdownMenuContent, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
 import Columns from '../app/component/Columns';
 import DownloadButton from '../app/component/datadownload';
-import DownloadPDFButton from '../app/component/datadownloadpdf'
+import DownloadPDFButton from '../app/component/datadownloadpdf';
+
 interface UserData {
   name: string;
   email: string;
@@ -80,12 +81,10 @@ export function DataTable<TData, TValue>({
   return (
     <>
       <Columns table={table} />
-      <div className='flex items-center justify-between mb-4'>
+      {/* <div className='flex items-center justify-between mb-4'>
         <DownloadButton data={table.getRowModel().rows.map(row => row.original)} />
-      </div>
-      <div className='flex items-center justify-between mb-4'>
         <DownloadPDFButton data={table.getRowModel().rows.map(row => row.original)} />
-      </div>
+      </div> */}
       <div className='rounded-md border'>
         <Table>
           <TableHeader>

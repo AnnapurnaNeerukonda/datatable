@@ -1,75 +1,56 @@
 import {
-    ChevronLeftIcon,
-    ChevronRightIcon,
-    DoubleArrowLeftIcon,
-    DoubleArrowRightIcon,
-  } from "@radix-ui/react-icons";
-  import { type Table } from "@tanstack/react-table";
-  import { Input } from "@/components/ui/input";
-  import { Button } from "@/components/ui/button";
-  import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-  } from "@/components/ui/select";
-  import { useState } from "react";
-  
-  interface DataTablePaginationProps<TData> {
-    table: Table<TData>;
-    pageSizeOptions?: number[];
-  }
-  
-  export function DataTablePagination<TData>({
-    table,
-    pageSizeOptions = [5, 20, 30, 40, 50],
-  }: DataTablePaginationProps<TData>) {
-    const [pageIndexInput, setPageIndexInput] = useState<string>("");
-    const [errorMessage, setErrorMessage] = useState<string | null>(null);
-  
-    const handleGoToPage = (value: string) => {
-      if (value.trim() === "") {
-        setErrorMessage(null);
-        return;
-      }
-  
-      const pageIndex = Number(value) - 1;
-      if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= table.getPageCount()) {
-        setErrorMessage(`Invalid page number.`);
-      } else {
-        setErrorMessage(null);
-        table.setPageIndex(pageIndex);
-      }
-    };
-  
-    return (
-      <div className="flex w-full flex-col items-center justify-between gap-4 overflow-auto px-2 py-1 lg:flex-row sm:gap-8">
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
+} from "@radix-ui/react-icons";
+import { type Table } from "@tanstack/react-table";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useState } from "react";
+
+interface DataTablePaginationProps<TData> {
+  table: Table<TData>;
+  pageSizeOptions?: number[];
+}
+
+export function DataTablePagination<TData>({
+  table,
+  pageSizeOptions = [5, 20, 30, 40, 50],
+}: DataTablePaginationProps<TData>) {
+  const [pageIndexInput, setPageIndexInput] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+
+  const handleGoToPage = (value: string) => {
+    if (value.trim() === "") {
+      setErrorMessage(null);
+      return;
+    }
+
+    const pageIndex = Number(value) - 1;
+    if (isNaN(pageIndex) || pageIndex < 0 || pageIndex >= table.getPageCount()) {
+      setErrorMessage(`Invalid page number.`);
+    } else {
+      setErrorMessage(null);
+      table.setPageIndex(pageIndex);
+    }
+  };
+
+  return (
+    <div className="flex w-full flex-col items-center justify-between gap-4 overflow-auto px-2 py-1">
+      <div className="flex flex-col md:flex-row w-full items-center justify-between gap-4 lg:gap-8">
         <div className="flex-1 whitespace-nowrap text-sm text-muted-foreground">
           {table.getFilteredSelectedRowModel().rows.length} of{" "}
           {table.getFilteredRowModel().rows.length} row(s) selected.
         </div>
-        <div className="flex flex-col items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8">
-          <div className="flex items-center space-x-2">
-            <p className="whitespace-nowrap text-sm font-medium">Rows per page</p>
-            <Select
-              value={`${table.getState().pagination.pageSize}`}
-              onValueChange={(value) => {
-                table.setPageSize(Number(value));
-              }}
-            >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={table.getState().pagination.pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {pageSizeOptions.map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`}>
-                    {pageSize}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+        <div className="flex flex-row items-center justify-center gap-4 lg:justify-between lg:gap-8">
           <div className="flex w-[100px] items-center justify-center text-sm font-medium">
             Page {table.getState().pagination.pageIndex + 1} of{" "}
             {table.getPageCount()}
@@ -113,7 +94,29 @@ import {
             </Button>
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-col sm:flex-row">
+      </div>
+      <div className="flex flex-col md:flex-row w-full items-center justify-between gap-4 lg:gap-8">
+        <div className="flex items-center space-x-2">
+          <p className="whitespace-nowrap text-sm font-medium">Rows per page</p>
+          <Select
+            value={`${table.getState().pagination.pageSize}`}
+            onValueChange={(value) => {
+              table.setPageSize(Number(value));
+            }}
+          >
+            <SelectTrigger className="h-8 w-[70px]">
+              <SelectValue placeholder={table.getState().pagination.pageSize} />
+            </SelectTrigger>
+            <SelectContent side="top">
+              {pageSizeOptions.map((pageSize) => (
+                <SelectItem key={pageSize} value={`${pageSize}`}>
+                  {pageSize}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+        <div className="flex items-center gap-2 flex-col md:flex-row">
           <Input
             value={pageIndexInput}
             onChange={(e) => {
@@ -128,6 +131,6 @@ import {
           )}
         </div>
       </div>
-    );
-  }
-  
+    </div>
+  );
+}

@@ -26,7 +26,7 @@ const DownloadButton: React.FC<DownloadButtonProps> = ({ data }) => {
 
   return (
     <Button onClick={handleDownload}>
-      Download Excel
+      Download CSV
     </Button>
   );
 };

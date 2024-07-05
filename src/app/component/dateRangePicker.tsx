@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/popover';
 
 interface DatePickerProps {
-  className?: React.HTMLAttributes<HTMLDivElement>;
+  className?: string;
   onDateChange: (date: DateRange | undefined) => void;
 }
 
@@ -30,6 +30,13 @@ export function DatePickerWithRange({ className, onDateChange }: DatePickerProps
     setOkClicked(true);
     onDateChange(date);
   };
+
+  const handleClearClick = () => {
+    setDate(undefined);
+    setOkClicked(false);
+    onDateChange(undefined);
+  };
+
 
   return (
     <div className={cn('grid gap-2', className)}>
@@ -66,11 +73,14 @@ export function DatePickerWithRange({ className, onDateChange }: DatePickerProps
             className="rounded-md border"
             numberOfMonths={2}
           />
-          {date?.from && date.to && (
-            <div className="flex justify-end p-2">
-              <Button onClick={handleOkClick}>OK</Button>
-            </div>
-          )}
+          <div className="flex justify-end p-2">
+            <Button onClick={handleOkClick} className="mr-2">
+              OK
+            </Button>
+            <Button variant="outline" onClick={handleClearClick} className="mr-2">
+              Clear
+            </Button>
+          </div>
         </PopoverContent>
       </Popover>
     </div>
