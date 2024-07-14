@@ -111,10 +111,7 @@ export function DataTable<TData, TValue>({
       <div className='flex items-center justify-between mb-4'>
         <DownloadPDFButton data={dataToDownload} />
       </div>
-      <div className="fixed bottom-0 left-0 right-0 bg-white shadow-md p-4 flex items-center justify-center space-x-4">
-        <span>{Object.keys(rowSelection).length} row(s) selected</span>
-        
-      </div>
+     
       <div className="rounded-md border">
         <Table>
           <TableHeader>
