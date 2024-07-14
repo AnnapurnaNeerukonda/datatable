@@ -1,19 +1,31 @@
-import React, { useState, useMemo } from 'react';
-import {ColumnDef,flexRender,SortingState,VisibilityState,getCoreRowModel,getSortedRowModel,getFilteredRowModel,getPaginationRowModel,useReactTable,RowSelectionState,} from '@tanstack/react-table';
-import {Table,TableBody,TableCell,TableHead,TableHeader,TableRow,} from '@/components/ui/table';
-import {DropdownMenu,DropdownMenuCheckboxItem,DropdownMenuContent,DropdownMenuTrigger,} from '@/components/ui/dropdown-menu';
-import { Button } from '@/components/ui/button';
+'use client';
+import React, { useState, useMemo, useEffect } from 'react';
+import { useTheme } from 'next-themes';
+import { 
+  ColumnDef, 
+  flexRender, 
+  SortingState, 
+  VisibilityState, 
+  getCoreRowModel, 
+  getSortedRowModel, 
+  getFilteredRowModel, 
+  getPaginationRowModel, 
+  useReactTable, 
+  RowSelectionState 
+} from '@tanstack/react-table';
+import { 
+  Table, 
+  TableBody, 
+  TableCell, 
+  TableHead, 
+  TableHeader, 
+  TableRow 
+} from '@/components/ui/table';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
 import Columns from '../app/component/columns';
 import DownloadButton from '../app/component/datadownload';
-import DownloadPDFButton from '../app/component/datadownloadpdf'
-interface UserData {
-  name: string;
-  email: string;
-  status: string;
-  datecreated: string;
-}
+import DownloadPDFButton from '../app/component/datadownloadpdf';
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -24,6 +36,11 @@ export function DataTable<TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -77,16 +94,25 @@ export function DataTable<TData, TValue>({
     return isSorted.desc ? '↓' : '↑';
   };
 
+  if (!mounted) return null;
+
+ 
+  const selectedRowsData = table.getSelectedRowModel().rows.map(row => row.original);
+
+
+  const dataToDownload = selectedRowsData.length > 0 ? selectedRowsData : table.getRowModel().rows.map(row => row.original);
+
   return (
     <>
       <Columns table={table} />
       <div className='flex items-center justify-between mb-4'>
-        <DownloadButton data={table.getRowModel().rows.map(row => row.original)} />
+        <DownloadButton data={dataToDownload}/>
       </div>
       <div className='flex items-center justify-between mb-4'>
-        <DownloadPDFButton data={table.getRowModel().rows.map(row => row.original)} />
+        <DownloadPDFButton data={dataToDownload} />
       </div>
-      <div className='rounded-md border'>
+     
+      <div className="rounded-md border">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map(headerGroup => (
@@ -95,9 +121,9 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()}
-                    className='cursor-pointer select-none'
+                    className={`cursor-pointer select-none ${theme === 'light' ? 'text-blue-500 text-base font-semibold' : 'text-amber-400 text-base font-semibold'}`}
                   >
-                    <div className='flex items-center'>
+                    <div className="flex items-center">
                       {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
@@ -117,7 +143,7 @@ export function DataTable<TData, TValue>({
                   data-state={row.getIsSelected() ? 'selected' : undefined}
                 >
                   {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
+                    <TableCell key={cell.id} className={`p-4 ${theme === 'light' ? 'text-dark-900' : 'text-white-100'}`}>
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </TableCell>
                   ))}
@@ -127,7 +153,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columnsWithSelection.length}
-                  className='h-24 text-center'
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
