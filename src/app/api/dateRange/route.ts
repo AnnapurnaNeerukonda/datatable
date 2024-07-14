@@ -18,7 +18,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const connection = await pool.getConnection();
       const query = `
         SELECT name, status, email, amount, datecreated
-        FROM data
+        FROM users
         WHERE datecreated BETWEEN ? AND ?
       `;
       const [rows] = await connection.query(query, [formatISO(fromDate), formatISO(toDate)]);

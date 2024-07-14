@@ -5,7 +5,7 @@ import {DropdownMenu,DropdownMenuCheckboxItem,DropdownMenuContent,DropdownMenuTr
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
-import Columns from '../app/component/Columns';
+import Columns from '../app/component/columns';
 import DownloadButton from '../app/component/datadownload';
 import DownloadPDFButton from '../app/component/datadownloadpdf'
 interface UserData {
