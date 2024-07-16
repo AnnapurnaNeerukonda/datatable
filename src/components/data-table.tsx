@@ -195,6 +195,11 @@ export function DataTable<TData, TValue>({
   columns,
   data
 }: DataTableProps<TData, TValue>) {
+  const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
@@ -321,9 +326,9 @@ export function DataTable<TData, TValue>({
                   <TableHead
                     key={header.id}
                     onClick={header.column.getToggleSortingHandler()}
-                    className='cursor-pointer select-none'
+                    className={`cursor-pointer select-none ${theme === 'light' ? 'text-blue-500 text-base font-semibold' : 'text-amber-400 text-base font-semibold'}`}
                   >
-                    <div className='flex items-center'>
+                    <div className="flex items-center">
                       {flexRender(
                         header.column.columnDef.header,
                         header.getContext()
@@ -367,7 +372,7 @@ export function DataTable<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columnsWithSelection.length}
-                  className='h-24 text-center'
+                  className="h-24 text-center"
                 >
                   No results.
                 </TableCell>
@@ -401,3 +406,4 @@ export function DataTable<TData, TValue>({
     </>
   );
 }
+
