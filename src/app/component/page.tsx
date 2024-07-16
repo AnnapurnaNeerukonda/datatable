@@ -7,17 +7,6 @@ import StatusFilterComponent from './StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from './dateRangePicker';
 import { parseISO, isWithinInterval, format } from 'date-fns'; 
 import ThemeToggle from './theme-toggle';
-import {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-} from '@/components/ui/dropdown-menu';
-import { Button } from 'react-day-picker';
-import DownloadButton from './datadownload';
-import DownloadPDFButton from './datadownloadpdf';
 interface DataItem {
   [key: string]: any;
 }
@@ -45,6 +34,7 @@ const DisplayDetails: React.FC = () => {
       try {
         const response = await fetch(`/api/displaydetails?from=${newDateRange.from.toISOString()}&to=${newDateRange.to.toISOString()}`);
         const data: DataItem[] = await response.json();
+        console.log(data)
         setData(data);
         setFilteredData(data); 
         setIsServerSearch(true);
@@ -62,8 +52,9 @@ const DisplayDetails: React.FC = () => {
       try {
         const response = await fetch('/api/displaydetails');
         const data: DataItem[] = await response.json();
-        setData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') }))); // Format datecreated
-        setOriginalData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') }))); // Format datecreated
+        console.log(data)
+        setData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') }))); 
+        setOriginalData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') }))); 
 
         if (data.length > 0) {
           const dynamicColumns = Object.keys(data[0]).map((key) => ({
@@ -108,21 +99,6 @@ const DisplayDetails: React.FC = () => {
   return (
 
     <div className="container mx-auto py-10">
-     {/* <div className="flex justify-between mb-4">
-    <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
-  
-  <div className="flex justify-between gap-4">
-     <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
-      <DatePickerWithRange onDateChange={handleDateChange} />
-    
-    <div >
-     <ThemeToggle />
-
-    </div>
-
-  </div>
-
-</div> */}
 <div className="flex flex-col md:flex-row md:justify-between mb-4">
   <div className="flex md:flex-1 md:justify-between md:gap-4">
     <div className="flex md:flex-1 md:justify-start">
@@ -143,9 +119,6 @@ const DisplayDetails: React.FC = () => {
     </div>
   </div>
 </div>
-
-
-
 <DataTable columns={columns} data={filteredData} />
 
     </div>

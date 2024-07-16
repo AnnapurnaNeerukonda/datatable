@@ -22,7 +22,12 @@ export function DatePickerWithRange({ className, onDateChange }: DatePickerProps
   const [okClicked, setOkClicked] = useState(false);
 
   const handleDateChange = (newDate: DateRange | undefined) => {
-    setDate(newDate);
+    if (newDate && newDate.from && !newDate.to) {
+      // If only the from date is selected, set the to date to be the same as the from date
+      setDate({ from: newDate.from, to: newDate.from });
+    } else {
+      setDate(newDate);
+    }
     setOkClicked(false);
   };
 
@@ -66,7 +71,7 @@ export function DatePickerWithRange({ className, onDateChange }: DatePickerProps
             className="rounded-md border"
             numberOfMonths={2}
           />
-          {date?.from && date.to && (
+          {date?.from && (
             <div className="flex justify-end p-2">
               <Button onClick={handleOkClick}>OK</Button>
             </div>

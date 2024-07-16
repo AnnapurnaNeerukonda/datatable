@@ -5,19 +5,26 @@ import 'jspdf-autotable';
 
 interface DownloadPDFButtonProps {
   data: any[];
+  heading: string;
+  saveAs: string;
 }
 
-const DownloadPDFButton: React.FC<DownloadPDFButtonProps> = ({ data }) => {
+const DownloadPDFButton: React.FC<DownloadPDFButtonProps> = ({ data, heading, saveAs }) => {
   const handleDownload = () => {
     const doc = new jsPDF();
 
-    const tableData = data.map(item => [item.name, item.email, item.status,item.amount, item.datecreated]);
+    doc.text(heading, 20, 20);
 
-    const columns = ['Name', 'Email', 'Status','amount','Date Created'];
+    const columns = data.length > 0 ? Object.keys(data[0]) : [];
+    const tableData = data.map(item => columns.map(col => item[col]));
 
-    doc.autoTable({ head: [columns], body: tableData });
+    doc.autoTable({
+      head: [columns],
+      body: tableData,
+      startY: 30, 
+    });
 
-    doc.save('data.pdf');
+    doc.save(`${saveAs}.pdf`);
   };
 
   return <Button onClick={handleDownload}>Download PDF</Button>;
