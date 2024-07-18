@@ -5,7 +5,7 @@ import { DataTable } from '../../components/data-table';
 import SearchComponent from './searchComponent';
 import StatusFilterComponent from './StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from './dateRangePicker';
-import { parseISO, isWithinInterval, format } from 'date-fns'; // Import format from date-fns
+import { parseISO, isWithinInterval, format } from 'date-fns';
 import ThemeToggle from './theme-toggle';
 
 interface DataItem {
@@ -35,7 +35,7 @@ const DisplayDetails: React.FC = () => {
       try {
         const response = await fetch(`/api/displaydetails?from=${newDateRange.from.toISOString()}&to=${newDateRange.to.toISOString()}`);
         const data: DataItem[] = await response.json();
-        setData(data); // Format datecreated
+        setData(data);
         setFilteredData(data);
         setIsServerSearch(true);
       } catch (error) {
@@ -53,8 +53,8 @@ const DisplayDetails: React.FC = () => {
         const response = await fetch('/api/displaydetails');
         const data: DataItem[] = await response.json();
         console.log(data);
-        setData(data); // Format datecreated
-        setOriginalData(data); // Format datecreated
+        setData(data);
+        setOriginalData(data);
         console.log(data);
 
         if (data.length > 0) {
@@ -77,8 +77,17 @@ const DisplayDetails: React.FC = () => {
 
     if (dateRange?.from && dateRange.to) {
       filtered = filtered.filter((item) => {
-        const itemDate = parseISO(item.datecreated);
-        return dateRange.from && dateRange.to && isWithinInterval(itemDate, { start: dateRange.from, end: dateRange.to });
+        if (!item.datecreated) return false; // Skip items without a date
+        try {
+          const itemDate = parseISO(item.datecreated);
+          return isWithinInterval(itemDate, { 
+            start: dateRange.from as Date, 
+            end: dateRange.to as Date 
+          });
+        } catch (error) {
+          console.error('Error parsing date:', item.datecreated);
+          return false;
+        }
       });
     }
 
@@ -104,9 +113,9 @@ const DisplayDetails: React.FC = () => {
         <DatePickerWithRange onDateChange={handleDateChange} />
         <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
       
-      <span>
-        <ThemeToggle />
-      </span>
+        <span>
+          <ThemeToggle />
+        </span>
       </div>
       <DataTable columns={columns} data={filteredData} />
     </div>

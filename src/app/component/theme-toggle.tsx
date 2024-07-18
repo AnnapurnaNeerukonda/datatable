@@ -1,28 +1,27 @@
-// src/components/theme-toggle.tsx
-"use client";
+// components/ThemeToggle.tsx
+import { useEffect, useState } from 'react';
+import { ThemeProvider, useTheme } from '@shadcn/ui';
 
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
-import { FaSun, FaMoon } from "react-icons/fa";
-
-export default function ThemeToggle() {
+const ThemeToggle = () => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
 
-  useEffect(() => setMounted(true), []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  if (!mounted) return null;
+  if (!mounted) {
+    return null;
+  }
 
   return (
     <button
-      onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-      className="p-1 rounded focus:outline-none"
+      onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+      className="px-4 py-2 bg-gray-200 dark:bg-gray-800 text-black dark:text-white rounded"
     >
-      {theme === "dark" ? (
-        <FaSun className="w-6 h-6 text-white-500" />
-      ) : (
-        <FaMoon className="w-6 h-6 text-gray-800" />
-      )}
+      Toggle Theme
     </button>
   );
-}
+};
+
+export default ThemeToggle;
