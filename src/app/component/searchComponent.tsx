@@ -19,13 +19,37 @@ const SearchComponent: React.FC<SearchComponentProps> = ({ onSearch, onSearchBut
   const handleSearchClick = async () => {
     try {
       const response = await fetch(`/api/search?searchQuery=${encodeURIComponent(searchQuery)}`);
-      const data = await response.json();
+      let data = await response.json();
+  
+      const formatDate = (dateString: string | number | Date) => {
+        const date = new Date(dateString);
+        const day = date.getDate();
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+        return `${day}-${month}-${year}`;
+      };
+  
+      const convertDates = (obj: { [x: string]: any; hasOwnProperty: (arg0: string) => any; }) => {
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            if (typeof obj[key] === 'string' && !isNaN(Date.parse(obj[key]))) {
+              obj[key] = formatDate(obj[key]);
+            } else if (typeof obj[key] === 'object' && obj[key] !== null) {
+              convertDates(obj[key]);
+            }
+          }
+        }
+      };
+  
+      convertDates(data);
+  
       onSearchButtonClick(data);
       console.log(data);
     } catch (error) {
       console.error('Error fetching search results:', error);
     }
   };
+  
 
   return (
     <div className="flex items-center space-x-2 mb-4">

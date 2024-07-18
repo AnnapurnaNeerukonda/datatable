@@ -1,7 +1,6 @@
-
 import { NextApiRequest, NextApiResponse } from 'next';
-import pool from '../../../lib/db'; 
-import { formatISO, parseISO } from 'date-fns';
+import pool from '../../../lib/db';
+import { parseISO, format } from 'date-fns';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method === 'GET') {
@@ -18,10 +17,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       const connection = await pool.getConnection();
       const query = `
         SELECT name, status, email, amount, datecreated
-        FROM users
+        FROM data
         WHERE datecreated BETWEEN ? AND ?
       `;
-      const [rows] = await connection.query(query, [formatISO(fromDate), formatISO(toDate)]);
+      const [rows] = await connection.query(query, [fromDate, toDate]);
       connection.release();
 
       return res.status(200).json(rows);

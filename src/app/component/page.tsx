@@ -7,7 +7,6 @@ import StatusFilterComponent from './StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from './dateRangePicker';
 import { parseISO, isWithinInterval, format } from 'date-fns';
 import ThemeToggle from './theme-toggle';
-
 interface DataItem {
   [key: string]: any;
 }
@@ -107,6 +106,7 @@ const DisplayDetails: React.FC = () => {
   }, [searchQuery, selectedStatus, dateRange, data, originalData, isServerSearch]);
 
   return (
+
     <div className="container mx-auto py-10">
       <div className="flex justify-between mb-4">
         <SearchComponent onSearch={setSearchQuery} onSearchButtonClick={handleSearchResults} />
