@@ -22,6 +22,7 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { useState } from 'react';
+// import PrintDataComponent from '@/app/component/Print';
 interface UserData {
   name: string;
   email: string;
@@ -46,9 +47,29 @@ export function DataTable<TData, TValue>({
   const [heading, setHeading] = useState<string>('');
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [saveAs, setSaveAs] = useState('');
+  // const [showPrintConfirm, setShowPrintConfirm] = useState(false);
+  // const confirmPrint = () => {
+  //   const printContents = document.getElementById('printableArea')?.innerHTML;
+  //   if (printContents) {
+  //     const originalContents = document.body.innerHTML;
+  //     document.body.innerHTML = printContents;
+  //     window.print();
+  //     document.body.innerHTML = originalContents;
+  //     window.location.reload(); 
+  //   }
+  // }
   const handleViewDetails = (rowDetails: TData) => {
     setSelectedRowDetails(rowDetails);
     setIsSheetOpen(true);
+  };
+  const copyDetails = (rowDetails: TData) => {
+    const detailsArray = Object.entries(rowDetails).map(([key, value]) => `${key}: ${value}`);
+    const detailsString = detailsArray.join('\n');
+    navigator.clipboard.writeText(detailsString).then(() => {
+      alert('Details copied to clipboard!');
+    }).catch(err => {
+      console.error('Could not copy text: ', err);
+    });
   };
   const handlePopoverChange = (open: boolean) => {
     setPopoverOpen(open);
@@ -106,8 +127,6 @@ export function DataTable<TData, TValue>({
     return isSorted.desc ? '↓' : '↑';
   };
   const selectedRowsData = table.getSelectedRowModel().rows.map(row => row.original);
-
-
   const dataToDownload = selectedRowsData.length > 0 ? selectedRowsData : table.getRowModel().rows.map(row => row.original);
   return (
     <>
@@ -191,21 +210,10 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     ))}
                     <TableCell>
-                      <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} />
+                      <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} onOption2Click={()=> copyDetails(row.original)}/>
                     </TableCell>
                   </TableRow>
                 </React.Fragment>))
-              //   <TableRow
-              //     key={row.id}
-              //     data-state={row.getIsSelected() ? 'selected' : undefined}
-              //   >
-              //     {row.getVisibleCells().map((cell) => (
-              //       <TableCell key={cell.id}>
-              //         {flexRender(cell.column.columnDef.cell, cell.getContext())}
-              //       </TableCell>
-              //     ))}
-              //   </TableRow>
-              // ))
             ) : (
               <TableRow>
                 <TableCell
@@ -240,7 +248,6 @@ export function DataTable<TData, TValue>({
           </SheetFooter>
         </SheetContent>
       </Sheet>
-
     </>
   );
 }

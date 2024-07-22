@@ -42,7 +42,7 @@ const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click }) =
               View details
             </button>
             <button
-              onClick={handleClose}
+              onClick={()=>{handleClose();}}
               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
             >
             Copy
