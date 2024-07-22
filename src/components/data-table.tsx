@@ -1,10 +1,28 @@
-import React, { useMemo } from 'react';
-import { ColumnDef, flexRender, SortingState, VisibilityState, getCoreRowModel, getSortedRowModel, getFilteredRowModel, getPaginationRowModel, useReactTable, RowSelectionState } from '@tanstack/react-table';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import React, { useMemo, useState } from 'react';
+import {
+  ColumnDef,
+  flexRender,
+  SortingState,
+  VisibilityState,
+  getCoreRowModel,
+  getSortedRowModel,
+  getFilteredRowModel,
+  getPaginationRowModel,
+  useReactTable,
+  RowSelectionState
+} from '@tanstack/react-table';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow
+} from '@/components/ui/table';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
-import Columns from '../app/component/Columns';
+import Columns from '../app/component/columns';
 import DownloadButton from '../app/component/datadownload';
 import DownloadPDFButton from '../app/component/datadownloadpdf';
 import * as Popover from '@radix-ui/react-popover';
@@ -21,7 +39,7 @@ import {
   SheetTitle,
   SheetDescription,
 } from '@/components/ui/sheet';
-import { useState } from 'react';
+
 interface UserData {
   name: string;
   email: string;
@@ -51,15 +69,6 @@ export function DataTable<TData, TValue>({
     setSelectedRowDetails(rowDetails);
     setIsSheetOpen(true);
   };
-  const copyDetails = (rowDetails: TData) => {
-    const detailsArray = Object.entries(rowDetails).map(([key, value]) => `${key}: ${value}`);
-    const detailsString = detailsArray.join('\n');
-    navigator.clipboard.writeText(detailsString).then(() => {
-      alert('Details copied to clipboard!');
-    }).catch(err => {
-      console.error('Could not copy text: ', err);
-    });
-  };
   const handlePopoverChange = (open: boolean) => {
     setPopoverOpen(open);
     if (!open) {
@@ -67,6 +76,7 @@ export function DataTable<TData, TValue>({
       setSaveAs('');
     }
   };
+
   const selectionColumn: ColumnDef<TData> = {
     id: 'select',
     header: ({ table }) => (
@@ -115,54 +125,58 @@ export function DataTable<TData, TValue>({
     if (!isSorted) return null;
     return isSorted.desc ? '↓' : '↑';
   };
+
   const selectedRowsData = table.getSelectedRowModel().rows.map(row => row.original);
+
+
   const dataToDownload = selectedRowsData.length > 0 ? selectedRowsData : table.getRowModel().rows.map(row => row.original);
+
   return (
     <>
       <div className='flex items-center justify-between mb-4'>
-      <Columns table={table} />
-      <div className='flex items-center space-x-2'>
-      <Popover.Root open={popoverOpen} onOpenChange={handlePopoverChange}>
-          <Popover.Trigger asChild>
-            <button className="border rounded px-2 py-1">Download</button>
-          </Popover.Trigger>
-          <Popover.Portal>
-            <Popover.Content
-              align="center"
-              sideOffset={5}
-              className="bg-white p-4 rounded shadow-lg"
-            >
-              <div className="flex flex-col space-y-2">
-                <input
-                  type="text"
-                  value={heading}
-                  onChange={(e) => setHeading(e.target.value)}
-                  placeholder="Enter heading"
-                  className="border rounded px-2 py-1"
-                />
-                <input
-                  type="text"
-                  value={saveAs}
-                  onChange={(e) => setSaveAs(e.target.value)}
-                  placeholder="Save as"
-                  className="border rounded px-2 py-1"
-                />
-                <DownloadButton 
-                  data={dataToDownload} 
-                  heading={heading} 
-                  saveAs={saveAs} 
-                />
-                <DownloadPDFButton 
-                  data={dataToDownload} 
-                  heading={heading} 
-                  saveAs={saveAs} 
-                />
-              </div>
-            </Popover.Content>
-          </Popover.Portal>
-        </Popover.Root>
+        <Columns table={table} />
+        <div className='flex items-center space-x-2'>
+          <Popover.Root open={popoverOpen} onOpenChange={handlePopoverChange}>
+            <Popover.Trigger asChild>
+              <button className="border rounded px-2 py-1">Download</button>
+            </Popover.Trigger>
+            <Popover.Portal>
+              <Popover.Content
+                align="center"
+                sideOffset={5}
+                className="bg-white p-4 rounded shadow-lg"
+              >
+                <div className="flex flex-col space-y-2">
+                  <input
+                    type="text"
+                    value={heading}
+                    onChange={(e) => setHeading(e.target.value)}
+                    placeholder="Enter heading"
+                    className="border rounded px-2 py-1"
+                  />
+                  <input
+                    type="text"
+                    value={saveAs}
+                    onChange={(e) => setSaveAs(e.target.value)}
+                    placeholder="Save as"
+                    className="border rounded px-2 py-1"
+                  />
+                  <DownloadButton 
+                    data={dataToDownload} 
+                    heading={heading} 
+                    saveAs={saveAs} 
+                  />
+                  <DownloadPDFButton 
+                    data={dataToDownload} 
+                    heading={heading} 
+                    saveAs={saveAs} 
+                  />
+                </div>
+              </Popover.Content>
+            </Popover.Portal>
+          </Popover.Root>
+        </div>
       </div>
-    </div>
       <div className='rounded-md border'>
         <Table>
           <TableHeader>
@@ -218,16 +232,16 @@ export function DataTable<TData, TValue>({
       </div>
       <DataTablePagination table={table} />
       <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
-        <SheetContent side="right">
+        <SheetContent side="right" className="w-full max-w-4xl">
           <SheetHeader>
-            <SheetTitle>Row Details</SheetTitle>
+            <SheetTitle className="text-2xl">Row Details</SheetTitle>
           </SheetHeader>
           {selectedRowDetails && (
-            <div className="mt-4 p-4 border rounded shadow">
-              <p><strong>Name:</strong> {selectedRowDetails.name}</p>
-              <p><strong>Email:</strong> {selectedRowDetails.email}</p>
-              <p><strong>Status:</strong> {selectedRowDetails.status}</p>
-              <p><strong>Date Created:</strong> {selectedRowDetails.datecreated}</p>
+            <div className="mt-10 p-10 border rounded shadow">
+              <div className="text-xl mb-4"><strong>Name:</strong> {selectedRowDetails?.name || 'N/A'}</div>
+              <div className="text-xl mb-4"><strong>Email:</strong> {selectedRowDetails?.email || 'N/A'}</div>
+              <div className="text-xl mb-4"><strong>Status:</strong> {selectedRowDetails?.status || 'N/A'}</div>
+              <div className="text-xl mb-4"><strong>Date Created:</strong> {selectedRowDetails?.datecreated || 'N/A'}</div>
             </div>
           )}
           <SheetFooter>
