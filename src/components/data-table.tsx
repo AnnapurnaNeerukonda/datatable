@@ -22,22 +22,18 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
-import Columns from '../app/component/columns';
+import Columns from '../app/component/Columns';
 import DownloadButton from '../app/component/datadownload';
 import DownloadPDFButton from '../app/component/datadownloadpdf';
 import * as Popover from '@radix-ui/react-popover';
 import EllipsisDropdown from '../components/ui/ellipsis-dropdown';
 import {
   Sheet,
-  SheetTrigger,
   SheetClose,
-  SheetPortal,
-  SheetOverlay,
   SheetContent,
   SheetHeader,
   SheetFooter,
   SheetTitle,
-  SheetDescription,
 } from '@/components/ui/sheet';
 
 interface UserData {
@@ -59,7 +55,7 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [selectedRowDetails, setSelectedRowDetails] = useState<TData | null>(null);
+  const [selectedRowDetails, setSelectedRowDetails] = useState<RowDetails | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [heading, setHeading] = useState<string>('');
   const [popoverOpen, setPopoverOpen] = useState(false);
@@ -77,6 +73,20 @@ export function DataTable<TData, TValue>({
     }
   };
 
+  const copyDetails = (rowDetails: RowDetails) => {
+    setSelectedRowDetails(rowDetails);
+
+    const detailsArray = Object.entries(rowDetails).map(([key, value]) => `${key}: ${value}`);
+    const detailsString = detailsArray.join('\n');
+
+    navigator.clipboard.writeText(detailsString)
+      .then(() => {
+        alert('Details copied to clipboard!');
+      })
+      .catch(err => {
+        console.error('Could not copy text: ', err);
+      });
+  };
   const selectionColumn: ColumnDef<TData> = {
     id: 'select',
     header: ({ table }) => (

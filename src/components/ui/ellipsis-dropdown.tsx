@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 
 interface EllipsisDropdownProps {
   onOption1Click: () => void;
+  onOption2Click:()=>void;
 }
 
-const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click }) => {
+const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click, onOption2Click }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
@@ -42,7 +43,7 @@ const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click }) =
               View details
             </button>
             <button
-              onClick={()=>{handleClose();}}
+              onClick={()=>{onOption2Click(); handleClose();}}
               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
             >
             Copy
