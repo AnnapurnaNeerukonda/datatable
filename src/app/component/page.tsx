@@ -90,7 +90,8 @@ const DisplayDetails: React.FC = () => {
     }
 
     if (selectedStatus && selectedStatus !== 'all') {
-      filtered = filtered.filter((item) => item.status === selectedStatus);
+      const [column, status] = selectedStatus.split(':');
+      filtered = filtered.filter((item) => item[column] === status);
     }
 
     setFilteredData(filtered);
@@ -112,7 +113,12 @@ const DisplayDetails: React.FC = () => {
   <div className="flex md:flex-1 md:justify-between gap-4 mt-4 md:mt-0">
     <div className="flex md:flex-1 md:justify-start md:gap-4">
       <DatePickerWithRange onDateChange={handleDateChange} />
-      <StatusFilterComponent data={data} selectedStatus={selectedStatus} onStatusChange={setSelectedStatus} />
+      <StatusFilterComponent
+      data={data}
+      columnName="status"
+      selectedStatus={selectedStatus}
+      onStatusChange={setSelectedStatus}
+    />
     </div>
     <div className="hidden md:flex ">
       <ThemeToggle />
