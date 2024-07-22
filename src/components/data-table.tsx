@@ -22,7 +22,6 @@ import {
   SheetDescription,
 } from '@/components/ui/sheet';
 import { useState } from 'react';
-// import PrintDataComponent from '@/app/component/Print';
 interface UserData {
   name: string;
   email: string;
@@ -47,17 +46,7 @@ export function DataTable<TData, TValue>({
   const [heading, setHeading] = useState<string>('');
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [saveAs, setSaveAs] = useState('');
-  // const [showPrintConfirm, setShowPrintConfirm] = useState(false);
-  // const confirmPrint = () => {
-  //   const printContents = document.getElementById('printableArea')?.innerHTML;
-  //   if (printContents) {
-  //     const originalContents = document.body.innerHTML;
-  //     document.body.innerHTML = printContents;
-  //     window.print();
-  //     document.body.innerHTML = originalContents;
-  //     window.location.reload(); 
-  //   }
-  // }
+
   const handleViewDetails = (rowDetails: TData) => {
     setSelectedRowDetails(rowDetails);
     setIsSheetOpen(true);
