@@ -2,6 +2,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "./component/theme-provider";
+<<<<<<< HEAD
+=======
+// import ThemeToggle from "./component/theme-toggle";
+>>>>>>> 828dd7cc25c896c1c8c5e672d11489539a8629aa
 
 const inter = Inter({ subsets: ["latin"] });
 

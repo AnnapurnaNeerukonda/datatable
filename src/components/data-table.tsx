@@ -22,25 +22,27 @@ import {
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DataTablePagination } from '@/app/component/pagination';
-import Columns from '../app/component/columns';
+import Columns from '../app/component/Columns';
 import DownloadButton from '../app/component/datadownload';
 import DownloadPDFButton from '../app/component/datadownloadpdf';
 import * as Popover from '@radix-ui/react-popover';
 import EllipsisDropdown from '../components/ui/ellipsis-dropdown';
 import {
   Sheet,
-  SheetTrigger,
   SheetClose,
-  SheetPortal,
-  SheetOverlay,
   SheetContent,
   SheetHeader,
   SheetFooter,
   SheetTitle,
-  SheetDescription,
 } from '@/components/ui/sheet';
 
 interface UserData {
+  name: string;
+  email: string;
+  status: string;
+  datecreated: string;
+}
+interface RowDetails {
   name: string;
   email: string;
   status: string;
@@ -59,16 +61,17 @@ export function DataTable<TData, TValue>({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnVisibility, setColumnVisibility] = useState<VisibilityState>({});
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({});
-  const [selectedRowDetails, setSelectedRowDetails] = useState<TData | null>(null);
+  const [selectedRowDetails, setSelectedRowDetails] = useState<RowDetails | null>(null);
   const [isSheetOpen, setIsSheetOpen] = useState(false);
   const [heading, setHeading] = useState<string>('');
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [saveAs, setSaveAs] = useState('');
   
   const handleViewDetails = (rowDetails: TData) => {
-    setSelectedRowDetails(rowDetails);
+    setSelectedRowDetails(rowDetails as RowDetails);
     setIsSheetOpen(true);
   };
+<<<<<<< HEAD
   const copyDetails = (rowDetails: TData) => {
     setSelectedRowDetails(rowDetails);
   
@@ -83,6 +86,8 @@ export function DataTable<TData, TValue>({
     });
   };
 
+=======
+>>>>>>> 828dd7cc25c896c1c8c5e672d11489539a8629aa
   const handlePopoverChange = (open: boolean) => {
     setPopoverOpen(open);
     if (!open) {
@@ -91,6 +96,20 @@ export function DataTable<TData, TValue>({
     }
   };
 
+  const copyDetails = (rowDetails: RowDetails) => {
+    setSelectedRowDetails(rowDetails);
+
+    const detailsArray = Object.entries(rowDetails).map(([key, value]) => `${key}: ${value}`);
+    const detailsString = detailsArray.join('\n');
+
+    navigator.clipboard.writeText(detailsString)
+      .then(() => {
+        alert('Details copied to clipboard!');
+      })
+      .catch(err => {
+        console.error('Could not copy text: ', err);
+      });
+  };
   const selectionColumn: ColumnDef<TData> = {
     id: 'select',
     header: ({ table }) => (
@@ -142,6 +161,7 @@ export function DataTable<TData, TValue>({
 
   const selectedRowsData = table.getSelectedRowModel().rows.map(row => row.original);
 
+
   const dataToDownload = selectedRowsData.length > 0 ? selectedRowsData : table.getRowModel().rows.map(row => row.original);
 
   return (
@@ -164,14 +184,14 @@ export function DataTable<TData, TValue>({
                     type="text"
                     value={heading}
                     onChange={(e) => setHeading(e.target.value)}
-                    placeholder="Enter heading"
+                    placeholder="Enter heading for file"
                     className="border rounded px-2 py-1"
                   />
                   <input
                     type="text"
                     value={saveAs}
                     onChange={(e) => setSaveAs(e.target.value)}
-                    placeholder="Save as"
+                    placeholder="Save File Name as"
                     className="border rounded px-2 py-1"
                   />
                   <DownloadButton 
@@ -226,7 +246,11 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     ))}
                     <TableCell>
+<<<<<<< HEAD
                       <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} onOption2Click={()=>copyDetails(row.original)} />
+=======
+                      <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} onOption2Click={() => copyDetails(row.original as RowDetails)} />
+>>>>>>> 828dd7cc25c896c1c8c5e672d11489539a8629aa
                     </TableCell>
                   </TableRow>
                 </React.Fragment>))

@@ -17,7 +17,15 @@ const DownloadPDFButton: React.FC<DownloadPDFButtonProps> = ({ data, heading, sa
 
     const columns = ['Name', 'Email', 'Status', 'Amount', 'Date Created'];
 
+<<<<<<< HEAD
     (doc as any).autoTable({ head: [columns], body: tableData });
+=======
+    (doc as any).autoTable({
+      head: [columns],
+      body: tableData,
+      startY: 30, 
+    });
+>>>>>>> 828dd7cc25c896c1c8c5e672d11489539a8629aa
 
     doc.save(`${saveAs}.pdf`);
   };
