@@ -18,7 +18,7 @@ const DownloadPDFButton: React.FC<DownloadPDFButtonProps> = ({ data, heading, sa
     const columns = data.length > 0 ? Object.keys(data[0]) : [];
     const tableData = data.map(item => columns.map(col => item[col]));
 
-    doc.autoTable({
+    (doc as any).autoTable({
       head: [columns],
       body: tableData,
       startY: 30, 

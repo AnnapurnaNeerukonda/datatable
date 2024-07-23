@@ -42,6 +42,12 @@ interface UserData {
   status: string;
   datecreated: string;
 }
+interface RowDetails {
+  name: string;
+  email: string;
+  status: string;
+  datecreated: string;
+}
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -62,7 +68,7 @@ export function DataTable<TData, TValue>({
   const [saveAs, setSaveAs] = useState('');
 
   const handleViewDetails = (rowDetails: TData) => {
-    setSelectedRowDetails(rowDetails);
+    setSelectedRowDetails(rowDetails as RowDetails);
     setIsSheetOpen(true);
   };
   const handlePopoverChange = (open: boolean) => {
@@ -161,14 +167,14 @@ export function DataTable<TData, TValue>({
                     type="text"
                     value={heading}
                     onChange={(e) => setHeading(e.target.value)}
-                    placeholder="Enter heading"
+                    placeholder="Enter heading for file"
                     className="border rounded px-2 py-1"
                   />
                   <input
                     type="text"
                     value={saveAs}
                     onChange={(e) => setSaveAs(e.target.value)}
-                    placeholder="Save as"
+                    placeholder="Save File Name as"
                     className="border rounded px-2 py-1"
                   />
                   <DownloadButton 
@@ -223,7 +229,7 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     ))}
                     <TableCell>
-                      <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} onOption2Click={()=> copyDetails(row.original)}/>
+                      <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} onOption2Click={() => copyDetails(row.original as RowDetails)} />
                     </TableCell>
                   </TableRow>
                 </React.Fragment>))
