@@ -6,7 +6,7 @@ import SearchComponent from './searchComponent';
 import StatusFilterComponent from './StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from './dateRangePicker';
 import { parseISO, isWithinInterval, format } from 'date-fns';
-import ThemeToggle from './theme-toggle';
+import { ThemeToggle } from './theme-toggle';
 interface DataItem {
   [key: string]: any;
 }
@@ -51,10 +51,8 @@ const DisplayDetails: React.FC = () => {
       try {
         const response = await fetch('/api/displaydetails');
         const data: DataItem[] = await response.json();
-        console.log(data);
-        setData(data);
-        setOriginalData(data);
-        console.log(data);
+        setData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') })));
+        setOriginalData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'dd-MMM-yyyy') })));
 
         if (data.length > 0) {
           const dynamicColumns = Object.keys(data[0]).map((key) => ({

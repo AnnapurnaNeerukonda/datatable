@@ -4,9 +4,10 @@ import React, { useState } from 'react';
 
 interface EllipsisDropdownProps {
   onOption1Click: () => void;
+  onOption2Click: () => void;
 }
 
-const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click }) => {
+const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click, onOption2Click }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleClick = () => {
@@ -33,7 +34,7 @@ const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click }) =
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 z-10 w-48 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
+        <div className="absolute right-0 z-10 w-48 mt-2 origin-top-right border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
           <div className="py-1">
             <button
               onClick={() => { onOption1Click(); handleClose(); }}
@@ -42,16 +43,10 @@ const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click }) =
               View details
             </button>
             <button
-              onClick={handleClose}
+               onClick={()=>{ onOption2Click(); handleClose();}}
               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-            >
+>
             Copy
-            </button>
-            <button
-              onClick={handleClose}
-              className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-            >
-              Option 3
             </button>
           </div>
         </div>

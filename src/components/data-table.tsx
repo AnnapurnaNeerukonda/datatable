@@ -64,10 +64,23 @@ export function DataTable<TData, TValue>({
   const [heading, setHeading] = useState<string>('');
   const [popoverOpen, setPopoverOpen] = useState(false);
   const [saveAs, setSaveAs] = useState('');
-
+  
   const handleViewDetails = (rowDetails: TData) => {
     setSelectedRowDetails(rowDetails);
     setIsSheetOpen(true);
+  };
+  const copyDetails = (rowDetails: TData) => {
+    setSelectedRowDetails(rowDetails);
+  
+    const detailsArray = Object.entries(rowDetails).map(([key, value]) => `${key}: ${value}`);
+  
+    const detailsString = detailsArray.join('\n');
+  
+    navigator.clipboard.writeText(detailsString).then(() => {
+      alert('Details copied to clipboard!');
+    }).catch(err => {
+      console.error('Could not copy text: ', err);
+    });
   };
 
   const handlePopoverChange = (open: boolean) => {
@@ -213,7 +226,7 @@ export function DataTable<TData, TValue>({
                       </TableCell>
                     ))}
                     <TableCell>
-                      <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} />
+                      <EllipsisDropdown onOption1Click={() => handleViewDetails(row.original)} onOption2Click={()=>copyDetails(row.original)} />
                     </TableCell>
                   </TableRow>
                 </React.Fragment>))
