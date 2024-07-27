@@ -1,6 +1,8 @@
-import Page from '../app/component/page'
+
+import HomeLogin from './component/HomeLogin'
 export default function Home(){
   return (
-    <Page/>
+    <HomeLogin /> 
+   
   )
 }

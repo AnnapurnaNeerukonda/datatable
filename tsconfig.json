@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "src/contexts/DatabaseContext.tsx", "src/app/_app.tsx", "src/app/component/HomeLogin.tsx"],
   "exclude": ["node_modules"]
 }

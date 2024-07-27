@@ -1,13 +1,22 @@
 import mysql from 'mysql2/promise';
+import { DatabaseConfig } from '../app/contexts/DatabaseContext';
 
-const pool = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'data',
-  waitForConnections: true,
-  connectionLimit: 10,
-  queueLimit: 0,
-});
+let pool: mysql.Pool;
 
-export default pool;
+export const createPool = (databaseConfig: DatabaseConfig) => {
+  pool = mysql.createPool({
+    host: databaseConfig.host,
+    user: databaseConfig.user,
+    password: databaseConfig.password,
+    database: databaseConfig.database,
+   
+   
+  });
+};
+
+export const getPool = () => {
+  if (!pool) {
+    throw new Error('Database pool has not been created. Please initialize the pool using createPool.');
+  }
+  return pool;
+};
