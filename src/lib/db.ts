@@ -9,9 +9,7 @@ export const createPool = (databaseConfig: DatabaseConfig) => {
     user: databaseConfig.user,
     password: databaseConfig.password,
     database: databaseConfig.database,
-    waitForConnections: databaseConfig.waitForConnections,
-    connectionLimit: databaseConfig.connectionLimit,
-    queueLimit: databaseConfig.queueLimit,
+   
    
   });
 };

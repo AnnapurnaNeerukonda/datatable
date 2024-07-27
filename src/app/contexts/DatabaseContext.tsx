@@ -3,13 +3,13 @@ import { createContext, useContext, useState, ReactNode } from 'react';
 
 export interface DatabaseConfig {
   host: string;
+  database: string;
   user: string;
   password: string;
-  database: string;
-  waitForConnections: boolean;
-  connectionLimit: number;
-  queueLimit: number;
-  tableName: string;
+  dbport:number,
+  port:number,
+  
+ 
 }
 
 interface DatabaseContextProps {
@@ -26,13 +26,13 @@ interface DatabaseProviderProps {
 export const DatabaseProvider = ({ children }: DatabaseProviderProps) => {
   const [databaseConfig, setDatabaseConfig] = useState<DatabaseConfig>({
     host: '',
+    database: '',
     user: '',
     password: '',
-    database: '',
-    waitForConnections: true,
-    connectionLimit: 10,
-    queueLimit: 0,
-    tableName: '',
+    dbport:0,
+    port:0,
+    
+   
   });
 
   return (

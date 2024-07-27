@@ -40,6 +40,16 @@ export default function HomeLogin() {
             />
           </label>
           <label className="block">
+            <span className="text-gray-700">Database</span>
+            <input
+              name="database"
+              value={databaseConfig.database}
+              onChange={handleChange}
+              placeholder="Enter Database"
+              className="mt-1 block w-full p-2 border rounded"
+            />
+          </label>
+          <label className="block">
             <span className="text-gray-700">User</span>
             <input
               name="user"
@@ -60,21 +70,12 @@ export default function HomeLogin() {
               className="mt-1 block w-full p-2 border rounded"
             />
           </label>
-          <label className="block">
-            <span className="text-gray-700">Database</span>
-            <input
-              name="database"
-              value={databaseConfig.database}
-              onChange={handleChange}
-              placeholder="Enter Database"
-              className="mt-1 block w-full p-2 border rounded"
-            />
-          </label>
+          
           <label className="block">
             <span className="text-gray-700">waitForConnections</span>
             <input
-              name="waitForConnections"
-              value={databaseConfig.waitForConnections}
+              name="dbport"
+              value={databaseConfig.dbport}
               onChange={handleChange}
               placeholder="Enter waitForConnections"
               className="mt-1 block w-full p-2 border rounded"
@@ -83,33 +84,15 @@ export default function HomeLogin() {
           <label className="block">
             <span className="text-gray-700">connectionLimit</span>
             <input
-              name="connectionLimit"
-              value={databaseConfig.connectionLimit}
+              name="port"
+              value={databaseConfig.port}
               onChange={handleChange}
               placeholder="Enter connectionLimit"
               className="mt-1 block w-full p-2 border rounded"
             />
           </label>
-          <label className="block">
-            <span className="text-gray-700">queueLimit</span>
-            <input
-              name="queueLimit"
-              value={databaseConfig.queueLimit}
-              onChange={handleChange}
-              placeholder="Enter queueLimit"
-              className="mt-1 block w-full p-2 border rounded"
-            />
-          </label>
-          <label className="block">
-            <span className="text-gray-700">Table Name</span>
-            <input
-              name="tableName"
-              value={databaseConfig.tableName}
-              onChange={handleChange}
-              placeholder="Enter Table Name"
-              className="mt-1 block w-full p-2 border rounded"
-            />
-          </label>
+         
+          
           <button
             onClick={handleConnect}
             className="w-full mt-4 p-2 bg-blue-500 text-white rounded"

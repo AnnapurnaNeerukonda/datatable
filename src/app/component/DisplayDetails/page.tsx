@@ -122,6 +122,7 @@ const DisplayDetails: React.FC = () => {
           <div className="flex md:flex-1 md:justify-start">
             <SearchComponent onSearch={handleSearchQueryChange} onSearchButtonClick={handleSearchResults} />
           </div>
+          
           <div className="md:hidden">
             <ThemeToggle />
           </div>

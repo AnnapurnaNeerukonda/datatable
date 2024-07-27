@@ -5,6 +5,7 @@ export async function GET(req: NextRequest) {
   try {
     const pool = getPool();
     const connection = await pool.getConnection();
+   
     const [rows] = await pool.query('SELECT name, status, email, amount, datecreated FROM  ${databaseConfig.tableName} LIMIT 10');
     return NextResponse.json(rows);
   } catch (error) {
