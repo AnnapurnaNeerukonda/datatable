@@ -3,7 +3,7 @@ import pool from '../../../lib/db';
 
 export async function GET(req: NextRequest) {
   try {
-    const [rows] = await pool.query('SELECT name, status, email, amount, datecreated FROM data LIMIT 10');
+    const [rows] = await pool.query('SELECT name, status, email, amount, datecreated FROM  ${databaseConfig.tableName} LIMIT 10');
     return NextResponse.json(rows);
   } catch (error) {
     console.error('Error fetching data:', error);

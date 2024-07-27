@@ -12,7 +12,7 @@ export async function GET(req: NextRequest) {
   try {
     const query = `
       SELECT name, status, email, amount, datecreated
-      FROM data
+      FROM  ${databaseConfig.tableName}
       WHERE LOWER(name) LIKE ? OR LOWER(email) LIKE ?
     `;
     const [rows] = await pool.query(query, [`%${searchQuery.toLowerCase()}%`, `%${searchQuery.toLowerCase()}%`]);
