@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import pool from '../../../lib/db';
 
+
 export async function GET(req: NextRequest) {
   const searchParams = new URLSearchParams(req.nextUrl.search);
   const searchQuery = searchParams.get('searchQuery');
