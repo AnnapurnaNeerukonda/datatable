@@ -16,7 +16,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
       const connection = await pool.getConnection();
       const query = `
-        SELECT name, status, email, amount, DATE_FORMAT(datecreated, '%Y-%m-%d %H:%i:%s') AS datecreated
+        SELECT name, status, email, amount, datecreated
         FROM data
         WHERE datecreated BETWEEN ? AND ?
       `;

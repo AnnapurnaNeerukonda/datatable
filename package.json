@@ -18,6 +18,7 @@
     "@radix-ui/react-popover": "^1.1.1",
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
+    "@shadcn/ui": "^0.0.4",
     "@tanstack/react-table": "^8.19.2",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -29,7 +30,11 @@
     "mysql2": "^3.10.2",
     "next": "14.2.4",
     "next-themes": "^0.3.0",
+<<<<<<< HEAD
+    "radix-ui": "^1.0.1",
+=======
     "package.json": "^2.0.1",
+>>>>>>> 828dd7cc25c896c1c8c5e672d11489539a8629aa
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
@@ -40,8 +45,9 @@
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
-    "@types/node": "20.14.10",
-    "@types/react": "18.3.3",
+    "@types/jspdf": "^2.0.0",
+    "@types/node": "^20",
+    "@types/react": "^18.3.3",
     "@types/react-dom": "^18",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",

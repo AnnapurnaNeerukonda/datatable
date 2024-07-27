@@ -34,7 +34,7 @@ const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click ,onO
       </div>
 
       {isOpen && (
-        <div className="absolute right-0 z-10 w-48 mt-2 origin-top-right bg-white border border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
+        <div className="absolute right-0 z-10 w-48 mt-2 origin-top-right border-gray-200 divide-y divide-gray-100 rounded-md shadow-lg outline-none">
           <div className="py-1">
             <button
               onClick={() => { onOption1Click(); handleClose(); }}
@@ -45,7 +45,7 @@ const EllipsisDropdown: React.FC<EllipsisDropdownProps> = ({ onOption1Click ,onO
             <button
               onClick={()=>{onOption2Click();handleClose();}}
               className="w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-            >
+>
             Copy
             </button>
           </div>
