@@ -12,6 +12,7 @@ export const createPool = (databaseConfig: DatabaseConfig) => {
     waitForConnections: databaseConfig.waitForConnections,
     connectionLimit: databaseConfig.connectionLimit,
     queueLimit: databaseConfig.queueLimit,
+   
   });
 };
 

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import pool from '../../../lib/db';
-
+import { getPool } from '../../../lib/db';
+import { DatabaseConfig } from '@/app/contexts/DatabaseContext';
 
 export async function GET(req: NextRequest) {
   const searchParams = new URLSearchParams(req.nextUrl.search);
@@ -11,12 +11,14 @@ export async function GET(req: NextRequest) {
   }
 
   try {
+    const pool = getPool();
+    const connection = await pool.getConnection();
     const query = `
       SELECT name, status, email, amount, datecreated
-      FROM  ${databaseConfig.tableName}
+      FROM {databaseConfig.tableName}
       WHERE LOWER(name) LIKE ? OR LOWER(email) LIKE ?
     `;
-    const [rows] = await pool.query(query, [`%${searchQuery.toLowerCase()}%`, `%${searchQuery.toLowerCase()}%`]);
+    const [rows] = await connection.query(query, [`%${searchQuery.toLowerCase()}%`, `%${searchQuery.toLowerCase()}%`]);
     return NextResponse.json(rows);
   } catch (error) {
     console.error('Error fetching search results:', error);
