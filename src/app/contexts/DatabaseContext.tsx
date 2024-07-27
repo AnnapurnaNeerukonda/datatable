@@ -6,8 +6,7 @@ export interface DatabaseConfig {
   database: string;
   user: string;
   password: string;
-  dbport:number,
-  port:number,
+  table: string;
   
  
 }
@@ -29,9 +28,7 @@ export const DatabaseProvider = ({ children }: DatabaseProviderProps) => {
     database: '',
     user: '',
     password: '',
-    dbport:0,
-    port:0,
-    
+    table: ''
    
   });
 
