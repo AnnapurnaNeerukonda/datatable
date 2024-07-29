@@ -6,14 +6,13 @@ export interface DatabaseConfig {
   database: string;
   user: string;
   password: string;
-  table: string;
-  
- 
 }
 
 interface DatabaseContextProps {
   databaseConfig: DatabaseConfig;
+  globalTable: string;
   setDatabaseConfig: React.Dispatch<React.SetStateAction<DatabaseConfig>>;
+  setGlobalTable: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const DatabaseContext = createContext<DatabaseContextProps | undefined>(undefined);
@@ -27,13 +26,13 @@ export const DatabaseProvider = ({ children }: DatabaseProviderProps) => {
     host: '',
     database: '',
     user: '',
-    password: '',
-    table: ''
-   
+    password: ''
   });
+  
+  const [globalTable, setGlobalTable] = useState<string>('');
 
   return (
-    <DatabaseContext.Provider value={{ databaseConfig, setDatabaseConfig }}>
+    <DatabaseContext.Provider value={{ databaseConfig, globalTable , setDatabaseConfig, setGlobalTable }}>
       {children}
     </DatabaseContext.Provider>
   );

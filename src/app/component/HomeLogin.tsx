@@ -1,15 +1,16 @@
-"use client"
-import { useDatabase } from "../contexts/DatabaseContext"; // Adjust the import path as needed
+'use client'
+import { useRouter } from 'next/navigation';
+import { useDatabase } from "../contexts/DatabaseContext";
 import { useState } from 'react';
 
 export default function Home() {
-  const { databaseConfig, setDatabaseConfig } = useDatabase(); // Get the setter function from context
+  const { databaseConfig, setDatabaseConfig,  setGlobalTable } = useDatabase();
+  const router = useRouter();
   const [dbConfig, setDbConfig] = useState({
     host: '',
     user: '',
     password: '',
-    database: '',
-    table: ''
+    database: ''
   });
   const [tables, setTables] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
@@ -38,9 +39,13 @@ export default function Home() {
     }
   };
 
-  const handleTableClick = (table: string) => {
-    setDatabaseConfig({ ...databaseConfig, table }); // Set the selected table in context
-    window.location.href = `/component/DisplayDetails`;
+  const handleTableClick = async (table: string) => {
+    console.log(table);
+
+    setGlobalTable(table);
+
+    // Navigate to the new page using Next.js router
+    router.push('/component/DisplayDetails');
   };
 
   return (

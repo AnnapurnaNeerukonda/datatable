@@ -5,15 +5,21 @@ import { DataTable } from '@/components/data-table';
 import SearchComponent from '../searchComponent';
 import StatusFilterComponent from '../StatusFilterComponent';
 import { DatePickerWithRange, DateRange } from '../dateRangePicker';
-import { parseISO, isWithinInterval, format } from 'date-fns'; 
+import { parseISO, isWithinInterval, format } from 'date-fns';
 import ThemeToggle from '../theme-toggle';
-
+import { useDatabase } from '@/app/contexts/DatabaseContext';
 
 interface DataItem {
+  name: string;
+  status: string;
+  email: string;
+  amount: number;
+  datecreated: string;
   [key: string]: any;
 }
 
 const DisplayDetails: React.FC = () => {
+  const { databaseConfig, globalTable } = useDatabase();
   const [data, setData] = useState<DataItem[]>([]);
   const [originalData, setOriginalData] = useState<DataItem[]>([]);
   const [columns, setColumns] = useState<ColumnDef<DataItem>[]>([]);
@@ -34,11 +40,22 @@ const DisplayDetails: React.FC = () => {
 
     if (newDateRange?.from && newDateRange.to) {
       try {
-        const response = await fetch(`/api/displaydetails?from=${newDateRange.from.toISOString()}&to=${newDateRange.to.toISOString()}`);
+        const response = await fetch('/api/displaydetails', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            dbConfig: databaseConfig,
+            tableName: globalTable,
+            from: newDateRange.from.toISOString(),
+            to: newDateRange.to.toISOString(),
+          }),
+        });
+
         const data: DataItem[] = await response.json();
-        console.log(data);
         setData(data);
-        setFilteredData(data); 
+        setFilteredData(data);
         setIsServerSearch(true);
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -80,11 +97,19 @@ const DisplayDetails: React.FC = () => {
 
   const fetchData = useCallback(async () => {
     try {
-      const response = await fetch('/api/displaydetails');
+      const response = await fetch('/api/displaydetails', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          dbConfig: databaseConfig,
+          tableName: globalTable,
+        }),
+      });
       const data: DataItem[] = await response.json();
-      console.log(data);
-      setData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'yyyy-MM-dd') }))); 
-      setOriginalData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'yyyy-MM-dd') }))); 
+      setData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'yyyy-MM-dd') })));
+      setOriginalData(data.map(item => ({ ...item, datecreated: format(parseISO(item.datecreated), 'yyyy-MM-dd') })));
 
       if (data.length > 0) {
         const dynamicColumns = Object.keys(data[0]).map((key) => ({
@@ -96,7 +121,7 @@ const DisplayDetails: React.FC = () => {
     } catch (error) {
       console.error('Error fetching data:', error);
     }
-  }, []);
+  }, [globalTable, databaseConfig]);
 
   useEffect(() => {
     fetchData();
@@ -123,7 +148,6 @@ const DisplayDetails: React.FC = () => {
           <div className="flex md:flex-1 md:justify-start">
             <SearchComponent onSearch={handleSearchQueryChange} onSearchButtonClick={handleSearchResults} />
           </div>
-          
           <div className="md:hidden">
             <ThemeToggle />
           </div>

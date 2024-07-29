@@ -1,22 +1,20 @@
-// pages/api/table/[table].ts
-import { NextApiRequest, NextApiResponse } from 'next';
-import { getPool } from '../../../lib/db';
-import { useDatabase } from '@/app/contexts/DatabaseContext'; // Adjust the import path as needed
+import { NextRequest, NextResponse } from 'next/server';
+import mysql from 'mysql2/promise';
+import type { RowDataPacket } from 'mysql2';
 
-
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const {databaseConfig} = useDatabase();
-
-  
-
+export async function POST(req: NextRequest) {
+  const { dbConfig, tableName } = await req.json();
   try {
-    const pool = getPool();
-    const connection = await pool.getConnection();
-    const [rows] = await connection.query(`SELECT name, status, email, amount, datecreated FROM ${databaseConfig.table} LIMIT 10`);
-    connection.release();
-    res.status(200).json(rows);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const connection = await mysql.createConnection(dbConfig);
+    const [columns] = await connection.query<RowDataPacket[]>(`SHOW COLUMNS FROM ${tableName}`);
+    const [rows] = await connection.query<RowDataPacket[]>(`SELECT * FROM ${tableName}`);
+    connection.end();
+    return NextResponse.json({ columns, rows });
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    } else {
+      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
+    }
   }
 }

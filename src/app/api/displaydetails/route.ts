@@ -1,19 +1,23 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { getPool } from '../../../lib/db';
-import { useDatabase } from '@/app/contexts/DatabaseContext';
+import mysql from 'mysql2/promise';
+import type { RowDataPacket } from 'mysql2';
 
-export async function GET(req: NextRequest) {
-  const {databaseConfig} = useDatabase();
-
+export async function POST(req: NextRequest) {
+  const { dbConfig, tableName, from, to } = await req.json();
   try {
-    const pool = getPool();
-    const connection = await pool.getConnection();
-   
-    const [rows] = await pool.query('SELECT name, status, email, amount, datecreated FROM  ${databaseConfig.table} LIMIT 10');
+    const connection = await mysql.createConnection(dbConfig);
+    let query = `SELECT name, status, email, amount, datecreated FROM ${tableName}`;
+    if (from && to) {
+      query = `SELECT name, status, email, amount, datecreated FROM ${tableName} WHERE datecreated BETWEEN '${from}' AND '${to}' LIMIT 10`;
+    }
+    const [rows] = await connection.query<RowDataPacket[]>(query);
+    connection.end();
     return NextResponse.json(rows);
-  } catch (error) {
-    console.error('Error fetching data:', error);
-    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
+  } catch (err) {
+    if (err instanceof Error) {
+      return NextResponse.json({ error: err.message }, { status: 500 });
+    } else {
+      return NextResponse.json({ error: 'Unknown error' }, { status: 500 });
+    }
   }
-  
 }
